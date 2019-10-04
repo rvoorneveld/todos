@@ -1,3 +1,7 @@
+###> environment specific ###
+.idea
+.DS_Store
+###< environment specific ###
 
 ###> symfony/framework-bundle ###
 /.env.local
@@ -8,7 +12,6 @@
 /vendor/
 ###< symfony/framework-bundle ###
 
-.idea
-.DS_Store###> symfony/web-server-bundle ###
+###> symfony/web-server-bundle ###
 /.web-server-pid
 ###< symfony/web-server-bundle ###
