@@ -2,13 +2,22 @@
 
 namespace App\Controller;
 
+use App\Repository\TaskRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\{
     HttpFoundation\Response,
     Routing\Annotation\Route
 };
 
-class TasksController
+class TasksController extends AbstractController
 {
+
+    protected $taskRepository;
+
+    public function __construct(TaskRepository $taskRepository)
+    {
+        $this->taskRepository = $taskRepository;
+    }
 
     /**
      * @Route("/")
@@ -16,7 +25,9 @@ class TasksController
      */
     public function index(): Response
     {
-        return new Response('Show all tasks');
+        return $this->render('tasks/overview.html.twig', [
+            'tasks' => $this->taskRepository->findAll(),
+        ]);
     }
 
 }
