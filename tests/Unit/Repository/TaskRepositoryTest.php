@@ -4,7 +4,7 @@ namespace App\Tests\Unit\Repository;
 
 use App\Entity\Task;
 use App\Tests\Traits\InteractsWithDatabase;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use App\Tests\Unit\KernelTestCase;
 
 class TaskRepositoryTest extends KernelTestCase
 {
@@ -13,9 +13,11 @@ class TaskRepositoryTest extends KernelTestCase
 
     public function testTaskCanBeCreated(): void
     {
-        $task = ($this->getEntityManager()->getRepository(Task::class))->create($expected = 'foo');
+        $task = ($this->getEntityManager()->getRepository(Task::class))->create(
+            $title = $this->faker->sentence
+        );
 
-        $this->assertSame($expected, $task->getTitle());
+        $this->assertSame($title, $task->getTitle());
     }
 
 }
