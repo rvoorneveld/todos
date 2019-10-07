@@ -14,4 +14,15 @@ class TaskRepository extends ServiceEntityRepository
         parent::__construct($registry, Task::class);
     }
 
+    public function create(string $title): Task
+    {
+        ($entityManager = $this->getEntityManager())->persist(
+            ($task = new Task)->setTitle($title)
+        );
+
+        $entityManager->flush();
+
+        return $task;
+    }
+
 }
