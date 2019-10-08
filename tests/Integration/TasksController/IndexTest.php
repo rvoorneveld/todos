@@ -31,7 +31,7 @@ class IndexTest extends WebTestCase
         $crawler = $client->request('GET', '/');
 
         $this->assertSame(200, $client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Todos (1)', $text = $crawler->text());
+        $this->assertStringContainsString('Todos (1)', $crawler->text());
     }
 
 }
