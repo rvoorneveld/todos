@@ -20,7 +20,7 @@ class TasksController extends AbstractController
     }
 
     /**
-     * @Route("/")
+     * @Route("/", methods="GET")
      * @return Response
      */
     public function index(): Response
