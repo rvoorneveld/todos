@@ -3,8 +3,8 @@
 namespace App\Tests\Integration\TasksController;
 
 use App\Entity\Task;
+use App\Tests\Integration\WebTestCase;
 use App\Tests\Traits\InteractsWithDatabase;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class IndexTest extends WebTestCase
 {
