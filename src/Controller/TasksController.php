@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\TaskRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\{
+    HttpFoundation\Request,
     HttpFoundation\Response,
     Routing\Annotation\Route
 };
@@ -28,6 +29,20 @@ class TasksController extends AbstractController
         return $this->render('tasks/overview.html.twig', [
             'tasks' => $this->taskRepository->findAll(),
         ]);
+    }
+
+    /**
+     * @Route("/", methods="POST")
+     * @param Request $request
+     * @return Response
+     */
+    public function create(Request $request): Response
+    {
+        $this->taskRepository->create(
+            $request->get('title')
+        );
+
+        return $this->redirect('/');
     }
 
 }
