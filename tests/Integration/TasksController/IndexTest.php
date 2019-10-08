@@ -34,4 +34,14 @@ class IndexTest extends WebTestCase
         $this->assertStringContainsString('Todos (1)', $crawler->text());
     }
 
+    public function testCreatedTaskRedirectsToOverview(): void
+    {
+        (static::createClient())->request('POST', '/', [
+            'title' => $title = $this->faker->sentence,
+        ]);
+
+        self::assertResponseStatusCodeSame(302);
+        self::assertResponseRedirects('/');
+    }
+
 }
