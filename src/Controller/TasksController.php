@@ -45,4 +45,18 @@ class TasksController extends AbstractController
         return $this->redirect('/');
     }
 
+    /**
+     * @Route("/task/{id}", methods="PATCH")
+     * @param Request $request
+     * @return Response
+     */
+    public function update(Request $request): Response
+    {
+        $this->taskRepository->update($request->get('id'), [
+            'title' => $request->get('title'),
+        ]);
+
+        return $this->redirect('/');
+    }
+
 }

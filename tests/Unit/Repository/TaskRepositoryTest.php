@@ -20,4 +20,18 @@ class TaskRepositoryTest extends KernelTestCase
         $this->assertSame($title, $task->getTitle());
     }
 
+    public function testTaskCanBeUpdated(): void
+    {
+        $taskId = (($taskRepository = $this->getEntityManager()->getRepository(Task::class))->create(
+            $title = $this->faker->sentence
+        ))->getId();
+
+        $updatedTask = $taskRepository->update($taskId, [
+            'title' => $updatedTitle = $this->faker->unique()->sentence,
+        ]);
+
+        $this->assertNotSame($title, $updatedTaskTitle = $updatedTask->getTitle());
+        $this->assertSame($updatedTitle, $updatedTaskTitle);
+    }
+
 }

@@ -11,30 +11,43 @@ class IndexTest extends WebTestCase
 
     use InteractsWithDatabase;
 
-    protected function createTask(string $title): void
+    protected function addTask(?string $title = null): Task
     {
         ($em = $this->getEntityManager())->persist(
-            (new Task)->setTitle($title)
+            $task = (new Task)->setTitle($title ?? $this->faker->sentence)
         );
         $em->flush();
+
+        return $task;
     }
 
-    public function testIndexCountsNumberOfTasks(): void
+    public function testOverviewWithoutTasks(): void
     {
         $crawler = ($client = static::createClient())->request('GET', '/');
 
         $this->assertSame(200, $client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Todos (0)', $crawler->text());
-
-        $this->createTask('foo');
-
-        $crawler = $client->request('GET', '/');
-
-        $this->assertSame(200, $client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Todos (1)', $crawler->text());
+        $this->assertStringContainsString('Tasks (0)', $crawler->text());
     }
 
-    public function testCreatedTaskRedirectsToOverview(): void
+    public function testOverviewCountsNumberOfTasks(): void
+    {
+        $total = $this->faker->numberBetween(1, 9);
+        $titles = [];
+        for ($i = 1; $i <= $total; $i++) {
+            $this->addTask($titles[] = $this->faker->unique()->sentence);
+        }
+
+        $crawler = ($client = static::createClient())->request('GET', '/');
+
+        $this->assertSame(200, $client->getResponse()->getStatusCode());
+        $this->assertStringContainsString("Tasks ({$total})", $crawler->text());
+
+        foreach ($titles as $title) {
+            $this->assertContains($title, $crawler->filter('.test-tasks .test-tasks__title')->extract('value'));
+        }
+    }
+
+    public function testTaskCanBeCreated(): void
     {
         (static::createClient())->request('POST', '/', [
             'title' => $title = $this->faker->sentence,
@@ -42,6 +55,17 @@ class IndexTest extends WebTestCase
 
         self::assertResponseStatusCodeSame(302);
         self::assertResponseRedirects('/');
+    }
+
+    public function testTaskTitleCanBeUpdated(): void
+    {
+        $taskId = ($this->addTask())->getId();
+
+        (static::createClient())->request('PATCH', "/task/{$taskId}", [
+            'title' => $title = $this->faker->unique()->sentence,
+        ]);
+
+        $this->assertSame($title, ($this->getEntityManager()->find(Task::class, $taskId))->getTitle());
     }
 
 }
