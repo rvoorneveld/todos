@@ -1,10 +1,26 @@
 {%  extends 'base.html.twig' %}
 
 {% block body %}
-<ul>
-    {% for task in tasks %}
-        <li>{{ task.title }}</li>
-    {% endfor %}
-</ul>
+    <header class="border-b my-8">
         <h1 class="text-4xl text-center pb-6">Tasks ({{ tasks|length }})</h1>
+    </header>
+    <div class="m-auto max-w-4xl">
+        <ul>
+            {% for task in tasks %}
+                <li class="text-lg p-2 flex border-b border-gray-400 hover:bg-gray-100">
+                    <span class="w-8 h-8 text-center rounded-full border border-gray-400 text-gray-400 self-center hover:border-green-400">
+                        v
+                    </span>
+                    <span class="flex-grow self-center ml-4">
+                        {{ task.title }}
+                    </span>
+                </li>
+            {% endfor %}#}
+            <li class="text-lg p-2 flex border-b border-gray-400">
+                <form method="POST" action="/" class="w-full">
+                    <input class="w-full" type="text" name="title" value="" placeholder="Add a task...">
+                </form>
+            </li>
+        </ul>
+    </div>
 {% endblock %}
