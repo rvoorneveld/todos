@@ -30,7 +30,7 @@ class TaskRepository extends ServiceEntityRepository
         return $task;
     }
 
-    public function update(int $id, array $data)
+    public function update(int $id, array $data): Task
     {
         $task = $this->entityManager->getRepository(Task::class)->find($id);
 
