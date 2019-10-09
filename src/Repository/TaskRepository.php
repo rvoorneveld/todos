@@ -5,22 +5,41 @@ namespace App\Repository;
 use App\Entity\Task;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 class TaskRepository extends ServiceEntityRepository
 {
 
-    public function __construct(ManagerRegistry $registry)
+    protected $entityManager;
+
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
     {
         parent::__construct($registry, Task::class);
+
+        $this->entityManager = $entityManager;
     }
 
     public function create(string $title): Task
     {
-        ($entityManager = $this->getEntityManager())->persist(
+        $this->entityManager->persist(
             ($task = new Task)->setTitle($title)
         );
 
-        $entityManager->flush();
+        $this->entityManager->flush();
+
+        return $task;
+    }
+
+    public function update(int $id, array $data)
+    {
+        $task = $this->entityManager->getRepository(Task::class)->find($id);
+
+        array_walk($data, static function($value, $key) use($task) {
+            $method = ucfirst($key);
+            $task->{"set{$method}"}($value);
+        });
+
+        $this->entityManager->flush();
 
         return $task;
     }
