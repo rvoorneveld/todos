@@ -29,7 +29,7 @@ class IndexTest extends WebTestCase
         $this->assertStringContainsString('Tasks (0)', $crawler->text());
     }
 
-    public function testOverviewCountsNumberOfTasks(): void
+    public function testOverviewShowsTasks(): void
     {
         $total = $this->faker->numberBetween(1, 9);
         $titles = [];
@@ -66,6 +66,20 @@ class IndexTest extends WebTestCase
         ]);
 
         $this->assertSame($title, ($this->getEntityManager()->find(Task::class, $taskId))->getTitle());
+    }
+
+    public function testTaskCompletedCanBeUpdated(): void
+    {
+        $taskId = ($task = $this->addTask())->getId();
+
+        $this->assertNull($task->getCompleted());
+
+        (static::createClient())->request('PATCH', "/task/{$taskId}", [
+            'title' => $this->faker->sentence,
+            'completed' => new \DateTime,
+        ]);
+
+        $this->assertNotNull(($this->getEntityManager()->find(Task::class, $taskId))->getCompleted());
     }
 
 }

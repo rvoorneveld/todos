@@ -22,6 +22,11 @@ class Task
      */
     private $title;
 
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $completed;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -35,6 +40,18 @@ class Task
     public function setTitle(string $title): self
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getCompleted(): ?\DateTime
+    {
+        return $this->completed;
+    }
+
+    public function setCompleted(?\DateTime $completed): self
+    {
+        $this->completed = $completed;
 
         return $this;
     }

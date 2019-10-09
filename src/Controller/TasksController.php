@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\TaskRepository;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\{
     HttpFoundation\Request,
@@ -49,11 +50,13 @@ class TasksController extends AbstractController
      * @Route("/task/{id}", methods="PATCH")
      * @param Request $request
      * @return Response
+     * @throws Exception
      */
     public function update(Request $request): Response
     {
         $this->taskRepository->update($request->get('id'), [
             'title' => $request->get('title'),
+            'completed' => false === empty($request->get('completed')) ? new \DateTime() : NULL
         ]);
 
         return $this->redirect('/');

@@ -20,7 +20,7 @@ class TaskRepositoryTest extends KernelTestCase
         $this->assertSame($title, $task->getTitle());
     }
 
-    public function testTaskCanBeUpdated(): void
+    public function testTaskTitleCanBeUpdated(): void
     {
         $taskId = (($taskRepository = $this->getEntityManager()->getRepository(Task::class))->create(
             $title = $this->faker->sentence
@@ -32,6 +32,34 @@ class TaskRepositoryTest extends KernelTestCase
 
         $this->assertNotSame($title, $updatedTaskTitle = $updatedTask->getTitle());
         $this->assertSame($updatedTitle, $updatedTaskTitle);
+    }
+
+    public function testTaskCanBeMarkedAsComplete(): void
+    {
+        $taskId = ($task = ($taskRepository = $this->getEntityManager()->getRepository(Task::class))->create(
+            $title = $this->faker->sentence
+        ))->getId();
+
+        $this->assertNull($task->getCompleted());
+
+        $updatedTask = $taskRepository->update($taskId, [
+            'completed' => $dateTime = new \DateTime,
+        ]);
+
+        $this->assertSame($dateTime, $updatedTask->getCompleted());
+    }
+
+    public function testTaskCanBeMarkedAsIncomplete(): void
+    {
+        $taskId = (($taskRepository = $this->getEntityManager()->getRepository(Task::class))->create(
+            $title = $this->faker->sentence
+        ))->getId();
+
+        $task = $taskRepository->update($taskId, [
+            'completed' => null,
+        ]);
+
+        $this->assertNull($task->getCompleted());
     }
 
 }

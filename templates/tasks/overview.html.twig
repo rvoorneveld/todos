@@ -7,11 +7,11 @@
     <div class="m-auto max-w-4xl">
         <ul class="test-tasks">
             {% for task in tasks %}
-                <li class="task text-lg p-2 border-b border-gray-400 hover:bg-gray-100">
+                <li class="task text-lg p-2 border-b border-gray-400 hover:bg-gray-100 {% if task.completed is not same as(null)%} text-gray-400 {% endif %}">
                     <form method="POST" action="/task/{{ task.id }}" class="flex">
                         <input type="hidden" name="_method" value="PATCH">
                         <input class="task--input test-tasks__title self-center w-full" type="text" name="title" value="{{ task.title }}">
-{#                        <input class="self-center" type="checkbox" name="completed" value="y" onChange="this.form.submit();">#}
+                        <input class="self-center" type="checkbox" name="completed" value="y" onChange="this.form.submit();" {% if task.completed is not same as(null) %}checked{% endif %}>
                     </form>
                 </li>
             {% endfor %}
