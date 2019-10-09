@@ -1,10 +1,10 @@
 {%  extends 'base.html.twig' %}
 
 {% block body %}
-<h1>Todos ({{ tasks|length }})</h1>
 <ul>
     {% for task in tasks %}
         <li>{{ task.title }}</li>
     {% endfor %}
 </ul>
+        <h1 class="text-4xl text-center pb-6">Tasks ({{ tasks|length }})</h1>
 {% endblock %}

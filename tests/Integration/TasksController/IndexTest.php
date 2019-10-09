@@ -19,19 +19,25 @@ class IndexTest extends WebTestCase
         $em->flush();
     }
 
-    public function testIndexCountsNumberOfTasks(): void
+    public function testOverviewWithoutTasks(): void
     {
         $crawler = ($client = static::createClient())->request('GET', '/');
 
         $this->assertSame(200, $client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Todos (0)', $crawler->text());
+        $this->assertStringContainsString('Tasks (0)', $crawler->text());
+    }
 
-        $this->createTask('foo');
+    public function testOverviewCountsNumberOfTasks(): void
+    {
+        $total = $this->faker->numberBetween(1, 9);
+        for ($i = 1; $i <= $total; $i++) {
+            $this->createTask($this->faker->unique()->sentence);
+        }
 
-        $crawler = $client->request('GET', '/');
+        $crawler = ($client = static::createClient())->request('GET', '/');
 
         $this->assertSame(200, $client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('Todos (1)', $crawler->text());
+        $this->assertStringContainsString("Tasks ({$total})", $crawler->text());
     }
 
     public function testCreatedTaskRedirectsToOverview(): void
