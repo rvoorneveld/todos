@@ -19,6 +19,7 @@ class TaskTest extends KernelTestCase
 
         $this->assertSame(1, $task->getId());
         $this->assertSame($title, $task->getTitle());
+        $this->assertNull($task->getCompleted());
     }
 
 }
